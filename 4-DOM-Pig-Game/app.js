@@ -8,7 +8,7 @@ GAME RULES:
 - The first player to reach 100 points on GLOBAL score wins the game
 
 */
-var scores, roundScore, activePlayer, diceDOM, gamePlaying;
+var scores, roundScore, activePlayer, diceDOM, gamePlaying, previousDice;
 diceDOM = document.querySelector('.dice');
 
 newGame();
@@ -24,11 +24,26 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
 		diceDOM.style.display = 'block';
 		diceDOM.src = 'dice-' + dice + '.png';
 
-		// 3. Update the round score if the rolled number was not 1
-		if(dice !== 1){
+		// 3. Update the round score if the rolled number was not 1 and not two 6 in a row (in this case zero score for the player)
+		if(previousDice === 6 && dice === 6){
+			scores[activePlayer] = 0;
+			document.getElementById('score-' + activePlayer).textContent = 0;
+			console.log('Podwójna szóstka');
+			nextPlayer();
+		} else if(dice !== 1){
 			// Add score
 			roundScore += dice;
 			roundActivePlayer.textContent = roundScore;
+			
+			// Mark/unmark that player has already 6
+			if(dice === 6){
+				document.querySelector('.player-' + activePlayer + '-has6').classList.remove('player-'+ activePlayer +'-has6--inActive');
+			} else {
+				document.querySelector('.player-' + activePlayer + '-has6').classList.add('player-'+ activePlayer +'-has6--inActive');
+			}
+
+
+			previousDice = dice;
 		} else {
 			// Next player
 			nextPlayer();
@@ -67,11 +82,13 @@ function newGame(){
 	scores = [0,0];
 	roundScore = 0;
 	activePlayer = 0;
+	previousDice = 0;
 	for(var i = 0; i < 2; i++){
 		document.getElementById('name-' + i).textContent = "Player " + i;
 		document.querySelector('.player-' + i + '-panel').classList.remove('winner');
 		document.getElementById('score-' + i).textContent = '0';
 		document.getElementById('current-' + i).textContent = '0';
+		document.querySelector('.player-' + i + '-has6').classList.add('player-'+ i +'-has6--inActive');
 	}	
 	document.querySelector('.player-0-panel').classList.add('active');
 	// document.querySelector('.btn-roll').style.display = "block";
@@ -84,11 +101,13 @@ function nextPlayer(){
 	roundScore = 0;
 	roundActivePlayer.textContent = 0;
 	activePlayer = activePlayer === 0 ? 1 : 0;
+	previousDice = 0;
 
-
-	// change class of active player
-	document.querySelector('.player-0-panel').classList.toggle('active');
-	document.querySelector('.player-1-panel').classList.toggle('active');
+	// change class of active player and unmark "has6"
+	for(var i = 0; i < 2; i++){
+		document.querySelector('.player-'+ i +'-panel').classList.toggle('active');
+		document.querySelector('.player-' + i + '-has6').classList.add('player-'+ i +'-has6--inActive');
+	}
 
 	// hide the dice
 	diceDOM.style.display = 'none';
