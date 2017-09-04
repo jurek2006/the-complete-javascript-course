@@ -8,8 +8,9 @@ GAME RULES:
 - The first player to reach 100 points on GLOBAL score wins the game
 
 */
-var scores, roundScore, activePlayer, diceDOM, gamePlaying, previousDice;
+var pointsToWin, scores, roundScore, activePlayer, diceDOM, gamePlaying, previousDice;
 diceDOM = document.querySelector('.dice');
+pointsToWin = 100;
 
 newGame();
 
@@ -61,7 +62,7 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
 		document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];
 
 		// Chceck if player won the game
-		if(scores[activePlayer] >= 100){
+		if(scores[activePlayer] >= pointsToWin){
 			// document.querySelector('.btn-roll').style.display = "none";
 			// document.querySelector('.btn-hold').style.display = "none";
 			document.getElementById('name-' + activePlayer).textContent = "WINNER!";
@@ -77,7 +78,35 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
 
 document.querySelector('.btn-new').addEventListener('click', newGame);
 
+document.querySelector('.btn-start').addEventListener('click', function(){
+
+	// gettings points to wind from input (if not between 10 and 1000 clear input)
+	var pointsInput = document.getElementById('points-to-win');
+
+	// check if number in input is integer - if not - floor:
+	if(pointsInput.value % 1 !== 0){
+		pointsInput.value = Math.floor(pointsInput.value);
+	}
+
+	if(pointsInput.value >= 10 && pointsInput.value <= 1000){
+		// change the global points needed to win the game
+		pointsToWin = pointsInput.value;
+
+		// hide start window and show game window
+		document.querySelector('.init-panel').classList.toggle('init-panel--visible');
+		document.querySelector('.game-panel').classList.toggle('game-panel--visible');
+	}
+	else{
+		pointsInput.value = "";
+	}
+})
+
 function newGame(){
+	// hide game windows and show start window
+	document.querySelector('.init-panel').classList.add('init-panel--visible');
+	document.querySelector('.game-panel').classList.remove('game-panel--visible');
+
+	document.getElementById('points-to-win').value = pointsToWin;
 	gamePlaying = true;
 	scores = [0,0];
 	roundScore = 0;
