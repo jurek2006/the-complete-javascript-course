@@ -90,24 +90,6 @@ body {
     margin-bottom: 130px;
 }
 
-.player-has6{
-    position: relative;
-    top: -150px;
-    margin-left: 150px;
-    margin-bottom: -75px;
-    transform: translateX(-50%);
-    height: 50px;
-    box-shadow: 0px 10px 60px rgba(0, 0, 0, 0.10);
-}
-
-.player-0-has6--inActive{
-    opacity: 0;
-}
-
-.player-1-has6--inActive{
-    opacity: 0;
-}
-
 .active { background-color: #f7f7f7; }
 .active .player-name { font-weight: 300; }
 
@@ -139,12 +121,6 @@ body {
 
 .player-current-score {
     font-size: 30px;
-}
-
-.has6{
-    transform: translateX(-50%);
-    height: 50px;
-    box-shadow: 0px 10px 60px rgba(0, 0, 0, 0.10);
 }
 
 button {
@@ -186,14 +162,22 @@ i {
 .btn-hold { top: 467px;}
 .btn-start { top: 300px; }
 
-.dice {
+.dice-0, .dice-1 {
     position: absolute;
     left: 50%;
-    top: 178px;
     transform: translateX(-50%);
     height: 100px;
     box-shadow: 0px 10px 60px rgba(0, 0, 0, 0.10);
 }
+
+.dice-0{
+    top: 108px;
+}
+
+.dice-1 {
+    top: 228px;
+}
+
 
 #points-to-win{
     margin-top: 20px;

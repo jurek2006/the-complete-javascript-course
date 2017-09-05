@@ -2,14 +2,15 @@
 GAME RULES:
 
 - The game has 2 players, playing in rounds
-- In each turn, a player rolls a dice as many times as he whishes. Each result get added to his ROUND score
+- In each turn, a player rolls a dice_0 as many times as he whishes. Each result get added to his ROUND score
 - BUT, if the player rolls a 1, all his ROUND score gets lost. After that, it's the next player's turn
 - The player can choose to 'Hold', which means that his ROUND score gets added to his GLBAL score. After that, it's the next player's turn
 - The first player to reach 100 points on GLOBAL score wins the game
 
 */
-var pointsToWin, scores, roundScore, activePlayer, diceDOM, gamePlaying, previousDice;
-diceDOM = document.querySelector('.dice');
+var pointsToWin, scores, roundScore, activePlayer, diceDOM_0, gamePlaying;
+diceDOM_0 = document.querySelector('.dice-0');
+diceDOM_1 = document.querySelector('.dice-1');
 pointsToWin = 100;
 
 newGame();
@@ -18,33 +19,27 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
 
 	if(gamePlaying){
 		// 1. Random number
-		var dice = Math.floor(Math.random() * 6) + 1;
+		var dice_0 = Math.floor(Math.random() * 6) + 1;
+		var dice_1 = Math.floor(Math.random() * 6) + 1;
 
 		// 2. Display the result
 		var roundActivePlayer = document.getElementById('current-' + activePlayer);
-		diceDOM.style.display = 'block';
-		diceDOM.src = 'dice-' + dice + '.png';
+		diceDOM_0.style.display = 'block';
+		diceDOM_0.src = 'dice-' + dice_0 + '.png';
+		diceDOM_1.style.display = 'block';
+		diceDOM_1.src = 'dice-' + dice_1 + '.png';
 
-		// 3. Update the round score if the rolled number was not 1 and not two 6 in a row (in this case zero score for the player)
-		if(previousDice === 6 && dice === 6){
+		// 3. Update the round score if the rolled number was not 1 and not 6 on both dices
+		if(dice_0 === 6 && dice_1 === 6){
+			roundActivePlayer.textContent = 0;
 			scores[activePlayer] = 0;
-			document.getElementById('score-' + activePlayer).textContent = 0;
-			console.log('Podwójna szóstka');
+			document.getElementById('score-' + activePlayer).textContent = '0';
+			console.log("Double 6");
 			nextPlayer();
-		} else if(dice !== 1){
+		} else if(dice_0 !== 1 && dice_1 !== 1){
 			// Add score
-			roundScore += dice;
+			roundScore += dice_0 + dice_1;
 			roundActivePlayer.textContent = roundScore;
-			
-			// Mark/unmark that player has already 6
-			if(dice === 6){
-				document.querySelector('.player-' + activePlayer + '-has6').classList.remove('player-'+ activePlayer +'-has6--inActive');
-			} else {
-				document.querySelector('.player-' + activePlayer + '-has6').classList.add('player-'+ activePlayer +'-has6--inActive');
-			}
-
-
-			previousDice = dice;
 		} else {
 			// Next player
 			nextPlayer();
@@ -117,12 +112,12 @@ function newGame(){
 		document.querySelector('.player-' + i + '-panel').classList.remove('winner');
 		document.getElementById('score-' + i).textContent = '0';
 		document.getElementById('current-' + i).textContent = '0';
-		document.querySelector('.player-' + i + '-has6').classList.add('player-'+ i +'-has6--inActive');
 	}	
 	document.querySelector('.player-0-panel').classList.add('active');
 	// document.querySelector('.btn-roll').style.display = "block";
 	// document.querySelector('.btn-hold').style.display = "block";
-	diceDOM.style.display = 'none';
+	diceDOM_0.style.display = 'none';
+	diceDOM_1.style.display = 'none';
 }
 
 function nextPlayer(){
@@ -132,13 +127,13 @@ function nextPlayer(){
 	activePlayer = activePlayer === 0 ? 1 : 0;
 	previousDice = 0;
 
-	// change class of active player and unmark "has6"
+	// change class of active player
 	for(var i = 0; i < 2; i++){
 		document.querySelector('.player-'+ i +'-panel').classList.toggle('active');
-		document.querySelector('.player-' + i + '-has6').classList.add('player-'+ i +'-has6--inActive');
 	}
 
-	// hide the dice
-	diceDOM.style.display = 'none';
+	// hide the dice_0 and dice_1
+	diceDOM_0.style.display = 'none';
+	diceDOM_1.style.display = 'none';
 }
 
