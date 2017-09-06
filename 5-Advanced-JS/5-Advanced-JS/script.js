@@ -161,22 +161,22 @@
 
 // CLOSURES
 
-function retirement(retirementAge){
-	var a = ' years left until retirement.';
-	return function(yearOfBirth){
-		var age = 2017 - yearOfBirth;
-		console.log((retirementAge - age) + a);
-	}
-}
+// function retirement(retirementAge){
+// 	var a = ' years left until retirement.';
+// 	return function(yearOfBirth){
+// 		var age = 2017 - yearOfBirth;
+// 		console.log((retirementAge - age) + a);
+// 	}
+// }
 
-var retirementUS = retirement(66);
+// var retirementUS = retirement(66);
 
-var retirementGermany = retirement(65);
-var retirementIceland = retirement(67);
+// var retirementGermany = retirement(65);
+// var retirementIceland = retirement(67);
 
-retirementGermany(1990);
-retirementUS(1990);
-retirementIceland(1990);
+// retirementGermany(1990);
+// retirementUS(1990);
+// retirementIceland(1990);
 // retirement(66)(1990); 
 
 // SMALL CODE CHALLENGE TO REWRITE interviewQuestion
@@ -197,23 +197,82 @@ retirementIceland(1990);
 // 	}
 // }
 
-function interviewQuestion(job){
+// function interviewQuestion(job){
 
-	return function(name){
-		if(job === 'designer'){
-			console.log(name + ', can you please what UX design is?');
-		} else if(job === 'teacher'){
-			console.log('What subject do you teach, ' + name + '?');
-		} else {
-			console.log('Hello ' + name + ' what do you do?');
-		}
+// 	return function(name){
+// 		if(job === 'designer'){
+// 			console.log(name + ', can you please what UX design is?');
+// 		} else if(job === 'teacher'){
+// 			console.log('What subject do you teach, ' + name + '?');
+// 		} else {
+// 			console.log('Hello ' + name + ' what do you do?');
+// 		}
+// 	}
+// }
+
+// var interviewDesigner = interviewQuestion('designer');
+// var interviewTeacher = interviewQuestion('teacher');
+// var interviewOther = interviewQuestion('');
+// interviewDesigner('Janek');
+// interviewTeacher('Franek');
+// interviewOther('Zdenek');
+
+// Bind, call apply
+
+// var john = {
+// 	name: 'John',
+// 	age: 26,
+// 	job: 'teacher',
+// 	presentation: function(style, timeOfDay){
+// 		if(style === 'formal'){
+// 			console.log('Good ' + timeOfDay + ', Ladies and gentlemen! I\'m ' + this.name + '. I\'m a ' + this.job + ' and I\'m ' + this.age + ' years old.');
+// 		} else if (style === 'friendly'){
+// 				console.log('Hey! What\'s up? I\'m ' + this.name + '. I\'m a ' + this.job + ' and I\'m ' + this.age + ' years old. Have a nice ' + timeOfDay);
+// 		}
+// 	}
+// };
+
+// var emily = {
+// 	name: 'Emily',
+// 	age: 35, 
+// 	job: 'designer'
+// };
+
+// john.presentation('friendly', 'morning');
+
+// john.presentation.call(emily, 'friendly', 'afternoon');
+
+// // john.presentation.apply(emily, ['friendly, morning']); Nie zadziała, bo presentation() oczekuje dwóch parametrów a nie tablicy
+
+// var johnFriendly = john.presentation.bind(john, 'friendly');
+
+// johnFriendly('morning');
+// johnFriendly('night');
+
+// var emilyFormal = john.presentation.bind(emily, 'formal');
+
+// emilyFormal('afternoon');
+
+var years = [1990, 1965, 1937, 2005, 1998];
+
+function arrayCalc(arr, fn){
+	var arrRes = [];
+	for(var i =0; i < arr.length; i++){
+		arrRes.push(fn(arr[i]));
 	}
+	return arrRes;
 }
 
-var interviewDesigner = interviewQuestion('designer');
-var interviewTeacher = interviewQuestion('teacher');
-var interviewOther = interviewQuestion('');
-interviewDesigner('Janek');
-interviewTeacher('Franek');
-interviewOther('Zdenek');
+function calcAge(el){
+	return 2017 - el;
+}
 
+function isFullAge(limit, el){
+	return el >= limit;
+}
+
+var ages = arrayCalc(years, calcAge);
+
+var fullJapan = arrayCalc(ages, isFullAge.bind(this, 20));
+console.log(ages);
+console.log(fullJapan);
