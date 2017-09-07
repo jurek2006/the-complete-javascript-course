@@ -20,10 +20,13 @@
 	Question.prototype.checkUserAnswer = function(userAnswer){
 		if(userAnswer === this.corrAnswInd){
 			console.log("Odpowiedź prawidłowa.");
+			return true;
 		} else if (userAnswer > 0 && userAnswer < this.answers.length){
 			console.log("Odpowiedź nieprawidłowa.");
+			return false;
 		} else {
-			console.log("Brak odpowiedzi o numerze " + userAnswer + " do podanego pytania.")
+			console.log("Brak odpowiedzi o numerze " + userAnswer + " do podanego pytania.");
+			return false;
 		}
 	}
 
@@ -47,14 +50,27 @@
 						['1911', '1914', '1945', '1939'],
 						3
 					));
+	// SPOSÓB WHILE
+	var score = 0;
+	while(true){
 
-	// Select one random question and log it on the console, with possible answers
-	var questionNum = Math.floor(Math.random() * questions.length);
-	questions[questionNum].consoleQuestion();
+		// Select one random question and log it on the console, with possible answers
+		var questionNum = Math.floor(Math.random() * questions.length);
+		questions[questionNum].consoleQuestion();
 
-	// Use the 'prompt' to ask user for the correct answer
-	var userAnswerNum = parseInt(prompt("Podaj numer prawidłowej odpowiedzi"));
-	questions[questionNum].checkUserAnswer(userAnswerNum);
+		// Use the 'prompt' to ask user for the correct answer
+		// If user input 'exit' - finish the loop
+		userAnswerNum = prompt("Podaj numer prawidłowej odpowiedzi");
+		if(userAnswerNum === 'exit'){ break }
+		else {userAnswerNum = parseInt(userAnswerNum)}
+		if(questions[questionNum].checkUserAnswer(userAnswerNum)){
+		// if function returns true === correct answer
+			score++;
+		}
+		console.log('Wynik: ' + score);
+	}
+
+
 })();
 
 // console.log(questions); Nie zadziała, bo kod jest w "prywatnej" funkcji IIFE
