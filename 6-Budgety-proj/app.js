@@ -40,7 +40,7 @@ var budgetController = (function(){
 
 			// Create new ID
 			if(data.allItems[type].length > 0){
-				ID = data.allItems[type][data.allItems[type].length - 1].id++;
+				ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
 			} else {
 				ID = 0;
 			}
@@ -58,6 +58,28 @@ var budgetController = (function(){
 			// Return the new element
 			return newItem;
 		}, 
+
+		deleteItem: function(type, id){
+			var ids, index;
+
+			// Znalezienie indexu podanego elementu (id) w tablicy data.allItems[type] (czyli data.allItems.inc lub data.allItems.exp)
+			// Tablica ta może zawierać elementy nie po kolei w takim znaczeniu, że np:
+			// [current.id = 0, current.id = 3, current.id = 8]
+			// dlatego generujemy tablicę ids, która w przykładzie będzie wyglądała tak:
+			// [0, 3, 8] - w ten sposób jeśli chcemy usunąć exp o id 8 to wiemy, że musimy usunąć:
+			// element tablicy data.allItems[type][index] gdzie index to ids.indexOf(id);
+
+			ids = data.allItems[type].map(function(current){
+				return current.id;
+			});
+
+			index = ids.indexOf(id);
+
+			// jeśli index nie istnieje, to jest -1
+			if(index !== -1){
+				data.allItems[type].splice(index, 1);
+			}
+		},
 
 		calculateBudget: function(){
 
@@ -202,15 +224,14 @@ var controller = (function(budgetCtrl, UICtrl){
 	}
 
 	var ctrlAddItem = function(){
-		var input, newItem;
 
 		// 1. Get the field input data
-		input = UIController.getinput();
+		var input = UIController.getinput();
 
 		if(input.description !== "" && !isNaN(input.value) && input.value > 0){
 
 			// 2. Add the item to the budget controller
-			newItem = budgetController.addItem(input.type, input.description, input.value);
+			var newItem = budgetController.addItem(input.type, input.description, input.value);
 
 			// 3. Add the item to the UI
 			UIController.addListItem(newItem, input.type);
@@ -224,16 +245,26 @@ var controller = (function(budgetCtrl, UICtrl){
 	}
 
 	var ctrlDeleteItem = function(event){
-		var itemID, splitID, type, ID;
+		var itemID, splitID, type, ID, itemDelete;
 
-		itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+		// itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+		function findParent(el, className){
+			while((el = el.parentElement) && !el.classList.contains(className));
+			return el;
+		}
+
+		itemDelete = findParent(event.target, 'item__delete');
+		if(itemDelete) itemID = itemDelete.parentNode.parentNode.id;
+
+
 		if(itemID){
 			// inc-1
 			splitID = itemID.split('-');
 			type = splitID[0];
-			ID = splitID[1];
+			ID = parseInt(splitID[1]);
 
 			// 1. delete item from the data structure
+			budgetCtrl.deleteItem(type, ID);
 
 			// 2. delete item from the UI
 
